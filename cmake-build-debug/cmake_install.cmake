@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/hp/Downloads/materials/oop/assignments/assignment2/task1-BigReal-program
+# Install script for directory: C:/Users/hp/Downloads/materials/oop/assignments/assignment2/BigReal-program
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/hp/Downloads/materials/oop/assignments/assignment2/task1-BigReal-program/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/hp/Downloads/materials/oop/assignments/assignment2/BigReal-program/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
