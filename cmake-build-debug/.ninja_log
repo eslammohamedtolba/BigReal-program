@@ -1,3 +1,23 @@
 # ninja log v5
 5	1035	6886173480238905	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
 1040	1466	6886173484386580	task1_BigReal_program.exe	e924876722b6adb
+4	14204	6886193013007232	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+14206	15274	6886193023685654	task1_BigReal_program.exe	e924876722b6adb
+4	9240	6886193559130876	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+9241	10218	6886193568870177	task1_BigReal_program.exe	e924876722b6adb
+6	8849	6886195120605796	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+8850	9835	6886195130322848	task1_BigReal_program.exe	e924876722b6adb
+11	9219	6886195387682074	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+9222	10259	6886195398016121	task1_BigReal_program.exe	e924876722b6adb
+10	11649	6886197035128563	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+11651	14152	6886197060933704	task1_BigReal_program.exe	e924876722b6adb
+6	10887	6886213509375405	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+10888	11956	6886213520046072	task1_BigReal_program.exe	e924876722b6adb
+6	9303	6886214155392777	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+9304	10257	6886214164937200	task1_BigReal_program.exe	e924876722b6adb
+5	11911	6886214655715880	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+11913	13553	6886214672051092	task1_BigReal_program.exe	e924876722b6adb
+4	9362	6886215022067011	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+9364	10393	6886215032318874	task1_BigReal_program.exe	e924876722b6adb
+10	9089	6886215343395639	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+9091	10142	6886215353839634	task1_BigReal_program.exe	e924876722b6adb
