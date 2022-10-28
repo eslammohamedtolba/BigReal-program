@@ -1,185 +1,407 @@
-#include <bits/stdc++.h>
+// FCAI – Object-Oriented Programming 1 – 2022 - Assignment 1
+// Program Name: BigDecimalInt
+// Last Modification Date: 27/10/2022
+// Author1 and ID and Group: Eslam Mohamed Abdul azim Ali Tolba  ID: 20211013
+// Author2 and ID and Group: Aya Ali Hassan  ID: 20210083 (d, e)
+// Author3 and ID and Group: Mohamed Ashraf Fahim  ID: 20210329 (f, i, j , k)
+/*
+description:
+ */
+
+#include <iostream>
+#include <deque>
+#include <regex>
 using namespace std;
-//----------------------------------------------------------------------------------------------------------------------------
-regex standard("[+-]?[0-9]*");
-void stringwsign(string &s1,string &s2)
-{
-    bool first=(s1[0]=='+' || s1[0]=='-'),second=(s2[0]=='+' || s2[0]=='-');
-    s1=s1.substr(first,s1.size()-first);
-    s2=s2.substr(second,s2.size()-second);
-}
-//-----------------------------------------------------------------------------------------------------------------------------
-void equalstrings(string &s1,string &s2)
-{
-    int size1=s1.size(),size2=s2.size();
-    string s3(abs(size1-size2),'0');
-    if(s1.size()>s2.size()){
-        s2=s3+s2;
-    }
-    else{
-        s1=s3+s1;
-    }
-}
-//-----------------------------------------------------------------------------------------------------------------------------
-string samesign(string str1,string str2,int first)
-{
-    int remaining=0,indexstr1=0,indexstr2=0;char ch;string str3="";
-    for(int i=str1.size()-1;i>=0;i--){
-        indexstr1=str1[i]-'0';indexstr2=str2[i]-'0';
-        ch=(indexstr1+indexstr2+remaining)%10+48;
-        str3=ch+str3;
-        remaining=(indexstr1+indexstr2+remaining)/10;
-    }
-    if(remaining!=0){
-        ch=remaining+48;
-        str3=ch+str3;
-    }
-    if(first==-1){
-        str3='-'+str3;
-    }
-    return str3;
-}
-//-----------------------------------------------------------------------------------------------------------------------------
-string diffsign(string str1,string str2,int first)
-{
-    int indexstr1=0,indexstr2=0;char ch;string str3="";
-    for(int i=str1.size()-1;i>=0;i--){
-        indexstr1=str1[i]-'0';indexstr2=str2[i]-'0';
-        if(str1[i]>=str2[i]){
-            ch=(indexstr1-indexstr2)+48;
-        }
-        else{
-            int j=i-1;
-            while(str1[j]=='0'){
-                str1[j]='9';
-                j--;
-            }
-            str1[j]--;
-            ch=(indexstr1+10-indexstr2)+48;
-        }
-        str3=ch+str3;
-    }
-    if(first==-1){
-        str3='-'+str3;
-    }
-    return str3;
-}
-//-----------------------------------------------------------------------------------------------------------------------------
-class BigDecimalInt
-{
+//----------------------------------------------------------------------------------------------------------------------
+class BigDecimalInt{
 private:
-    string strBigDecimalInt;
+    string number;
+    char sign;
+    void setNumber(string num);
+    bool checkValidInput(string input);
+
 public:
-    BigDecimalInt (string decStr)
+    bool operator < (const BigDecimalInt& anotherDec);
+    bool operator > (const BigDecimalInt& anotherDec);
+    bool operator == (const BigDecimalInt anotherDec);
+    BigDecimalInt& operator = (BigDecimalInt &anotherDec);
+    BigDecimalInt operator + (BigDecimalInt number2);
+    BigDecimalInt operator - (BigDecimalInt anotherDec);
+    friend ostream &operator << (ostream &out, BigDecimalInt num);
+    int size();
+    int Sign();
+
+    BigDecimalInt(){}
+    BigDecimalInt(string num)
     {
-        while(!regex_match(decStr, standard))
-        {
-            cin.clear();
-            cout << '(' << decStr << ')' << " is not valid as a BigDecimalInt" << endl;
-            cout << "enter another one:" << endl;
-            cin >> decStr;
-        }
-        strBigDecimalInt = decStr;
+        setNumber(num);
     }
-    BigDecimalInt (int decInt) : strBigDecimalInt(to_string(decInt)){}
-    BigDecimalInt operator+(BigDecimalInt anotherDec)
+};
+//----------------------------------------------------------------------------------------------------------------------
+// regex function that checks the validation of the input.
+bool BigDecimalInt :: checkValidInput(string input)
+{
+    regex validInput("[-+]?[0-9]+");
+    return regex_match(input, validInput);
+}
+//----------------------------------------------------------------------------------------------------------------------
+// constructor that takes a string as an input.
+void BigDecimalInt :: setNumber(string num)
+{
+    bool validNumber = checkValidInput(num);
+    if(validNumber)
     {
-        string str1 = strBigDecimalInt, str2 = anotherDec.strBigDecimalInt, str3="";
-        int first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? 1:-1);
-        stringwsign(str1, str2);
-        equalstrings(str1, str2);
-        if(first == second)
+        number = num;
+        if(number[0] == '+')
         {
-            str3=samesign(str1,str2,first);
+            number.erase(0,1);
+            sign = '+';
+        }
+        else if (number[0] == '-')
+        {
+            number.erase(0,1);
+            sign = '-';
         }
         else
         {
-            if(str2 > str1)
-            {
-                swap(str1, str2);
-                swap(first, second);
+            sign = '+';
+        }
+    }
+}
+//----------------------------------------------------------------------------------------------------------------------
+// operator < overloading function.
+bool BigDecimalInt :: operator < (const BigDecimalInt& anotherDec)
+{
+    string comp1 = "", comp2 = "";
+    long long len1 = number.length(), len2 = anotherDec.number.length();
+
+    while (len1 < len2){
+        comp1 += '0';
+        len1++;
+    }
+    while (len2 < len1){
+        comp2 += '0';
+        len2++;
+    }
+    comp1 += number;
+    comp2 += anotherDec.number;
+
+    if(sign == '-' && anotherDec.sign == '+')
+    {
+        return true;
+    }
+    else if(sign == '+' && anotherDec.sign == '-')
+    {
+        return false;
+    }
+    else if(sign == '+' && anotherDec.sign == '+')
+    {
+        return comp1 < comp2;
+    }
+    else
+    {
+        return comp1 > comp2;
+    }
+}
+//----------------------------------------------------------------------------------------------------------------------
+// operator > overloading function.
+bool BigDecimalInt :: operator > (const BigDecimalInt &anotherDec)
+{
+    string comp1 = "", comp2 = "";
+    long long len1 = number.length(), len2 = anotherDec.number.length();
+
+    while (len1 < len2){
+        comp1 += '0';
+        len1++;
+    }
+    while (len2 < len1){
+        comp2 += '0';
+        len2++;
+    }
+    comp1 += number;
+    comp2 += anotherDec.number;
+
+    if(sign == '-' && anotherDec.sign == '+')
+    {
+        return false;
+    }
+    else if(sign == '+' && anotherDec.sign == '-')
+    {
+        return true;
+    }
+    else if(sign == '+' && anotherDec.sign == '+')
+    {
+        return comp1 > comp2;
+    }
+    else
+    {
+        return comp1 < comp2;
+    }
+}
+//----------------------------------------------------------------------------------------------------------------------
+// operator == overloading function.
+bool BigDecimalInt :: operator == (const BigDecimalInt anotherDec)
+{
+    if (sign == anotherDec.sign && number == anotherDec.number)
+    {
+        return true;
+
+    }
+    else
+    {
+        return false;
+    }
+}
+//----------------------------------------------------------------------------------------------------------------------
+// operator = overloading function.
+BigDecimalInt& BigDecimalInt :: operator = (BigDecimalInt &anotherDec)
+{
+    sign = anotherDec.sign;
+    number = anotherDec.number;
+    return *this;
+}
+//----------------------------------------------------------------------------------------------------------------------
+// // operator + overloading function.
+BigDecimalInt BigDecimalInt :: operator + (BigDecimalInt number2)
+{
+    BigDecimalInt result;
+    char signNumber1 = sign, signNumber2 = number2.sign;
+
+    string num1 = number, num2 = number2.number;
+    while (num1.length() < num2.length()){
+        num1 = '0' + num1;
+    }
+    while (num2.length() < num1.length()){
+        num2 = '0' + num2;
+    }
+
+    if (signNumber1 == signNumber2){
+        result.sign = signNumber1;
+
+        auto it1 = num1.rbegin();
+        auto it2 = num2.rbegin();
+        int carry = 0;
+
+        while (it1 != num1.rend()){
+            int twoDigitsSum;
+            carry = 0;
+            twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
+            if(twoDigitsSum >= 10){
+                carry = 1;
             }
-            str3 = diffsign(str1, str2, first);
+            result.number = char((twoDigitsSum % 10) + '0') + result.number;
+            *(it1 + 1) = char (((*(it1 + 1) - '0') + carry) + '0');
+            it1++;
+            it2++;
         }
 
-        BigDecimalInt num3(str3);
-        return num3;
-    }
-    BigDecimalInt operator-(BigDecimalInt anotherDec)
-    {
-        int first=0,second=0;
-        string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt,str3="";
-        first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? -1:1);
-        stringwsign(str1,str2);
-        equalstrings(str1,str2);
-        if(first==second){
-            str3=samesign(str1,str2,first);
+        if(carry){
+            result.number = char ((carry) + '0') + result.number;
         }
-        else{
-            if(str1<str2){
-                swap(str1,str2);
-                swap(first,second);
+
+    }else{
+        deque<long long> d;
+        string res = "";
+
+        if (num1 < num2)
+        {
+            swap(num1, num2);
+            swap(signNumber1,signNumber2);
+        }
+
+        for (long long i = num1.length() - 1; i >= 0; i--)
+        {
+            if (num1[i] < num2[i])
+            {
+                num1[i] = char (((num1[i] - '0') + 10) + '0');
+                num1[i - 1] = char (((num1[i - 1] - '0') - 1) + '0');
+                d.push_front((num1[i] - '0') - (num2[i] - '0'));
             }
-            str3=diffsign(str1,str2,first);
+            else
+            {
+                d.push_front((num1[i] - '0') - (num2[i] - '0'));
+            }
         }
-        BigDecimalInt num3(str3);
-        return num3;
-    }
-    bool operator<(BigDecimalInt anotherDec)
-    {
-        string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt;
-        int first,second;
-        first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? 1:-1);
-        stringwsign(str1,str2);
-        equalstrings(str1,str2);
-        if(first<second || (first==second && first==-1 && str1>str2) || ((first==second && first==1 && str1<str2))){
-            return true;
+
+        bool right = false;
+        for (auto i : d)
+        {
+            res += to_string(i);
         }
-        else{
-            return false;
+
+        for (long long i = 0; i < res.length(); i++)
+        {
+            if (res[i] != '0')
+            {
+                right = true;
+            }
+            if (!right && res[i] == '0')
+            {
+                res.erase(i, 1);
+                i--;
+            }
         }
+        if(res.empty())res="0";
+        result.sign = signNumber1;
+        result.number = res;
     }
-    bool operator>(BigDecimalInt anotherDec)
-    {
-        string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt;
-        int first,second;
-        first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? 1:-1);
-        stringwsign(str1,str2);
-        equalstrings(str1,str2);
-        if(first>second || (first==second && second==-1 && str1<str2) || ((first==second && second==1 && str1>str2))){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    bool operator==(BigDecimalInt anotherDec)
-    {
-        if (strBigDecimalInt == anotherDec.strBigDecimalInt)
-            return true;
-        else
-            return false;
-    }
-    BigDecimalInt operator=(BigDecimalInt anotherDec)
-    {
-        strBigDecimalInt = anotherDec.strBigDecimalInt;
-    }
-    int size()
-    {
-        int size = strBigDecimalInt.length();
-        return size;
-    }
-    int sign()
-    {
-        //youssef
-        int sign = (strBigDecimalInt[0] != '-'? 1 : -1);
-        return sign;
-    }
-    friend ostream& operator << (ostream& out, BigDecimalInt b);
-};
-ostream& operator << (ostream& out, BigDecimalInt b)
+    return result;
+}
+//----------------------------------------------------------------------------------------------------------------------
+// operator - overloading function.
+BigDecimalInt BigDecimalInt :: operator - (BigDecimalInt anotherDec)
 {
-    out<<b.strBigDecimalInt;
+    BigDecimalInt obj;
+    string strmin = "", res = "";
+    deque<long long> d;
+
+
+    if (number.length() > anotherDec.number.length())
+    {
+        for (long long i = 0; i < number.length() - anotherDec.number.length(); i++)
+        {
+            strmin += '0';
+        }
+        strmin += anotherDec.number;
+        anotherDec.number = strmin;
+    }
+    else if (number.length() < anotherDec.number.length())
+    {
+        for (long long i = 0; i < anotherDec.number.length() - number.length(); i++)
+        {
+            strmin += '0';
+        }
+        strmin += number;
+        number = strmin;
+    }
+    bool ok = false;
+    if (number < anotherDec.number)
+    {
+        swap(number, anotherDec.number);
+        ok = true;
+    }
+    bool nv = true;
+    if (sign == '-' && anotherDec.sign == '-')
+    {
+        for (long long i = number.length() - 1; i >= 0; i--)
+        {
+            if (number[i] < anotherDec.number[i])
+            {
+                number[i] = char (((number[i] - '0') + 10) + '0');
+                number[i - 1] = char (((number[i - 1] - '0') - 1) + '0');
+                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
+            }
+            else
+            {
+                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
+            }
+        }
+        ok = !ok;
+    }
+    else if ((sign == '-' || anotherDec.sign == '-'))
+    {
+        string num1 = number, num2 = anotherDec.number;
+        auto it1 = num1.rbegin();
+        auto it2 = num2.rbegin();
+        int carry = 0;
+
+        while (it1 != num1.rend())
+        {
+            int twoDigitsSum;
+            carry = 0;
+            twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
+            if (twoDigitsSum >= 10)
+            {
+                carry = 1;
+            }
+            res = char((twoDigitsSum % 10) + '0') + res;
+            *(it1 + 1) = char(((*(it1 + 1) - '0') + carry) + '0');
+            it1++;
+            it2++;
+        }
+
+        if (carry)
+        {
+            res = char((carry) + '0') + res;
+        }
+        if (sign == '-')
+        {
+            nv = false;
+        }
+    }
+    else
+    {
+        for (long long i = number.length() - 1; i >= 0; i--)
+        {
+            if (number[i] < anotherDec.number[i])
+            {
+                number[i] = char (((number[i] - '0') + 10) + '0');
+                number[i - 1] = char (((number[i - 1] - '0') - 1) + '0');
+                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
+            }
+            else
+            {
+                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
+            }
+        }
+        nv = true;
+    }
+    if (!nv || ok) {
+        obj.sign = '-';
+    }else{
+        obj.sign = '+';
+    }
+    bool right = false;
+    for (auto i : d)
+    {
+        res += to_string(i);
+    }
+    for (long long i = 0; i < res.length(); i++)
+    {
+        if (res[i] != '-' && res[i] != '0')
+        {
+            right = true;
+        }
+        if (!right && res[i] == '0')
+        {
+            res.erase(i, 1);
+            i--;
+        }
+    }
+    if(res.empty())res="0";
+    obj.number = res;
+    return obj;
+}
+//----------------------------------------------------------------------------------------------------------------------
+// function to return the size of number.
+int BigDecimalInt :: size()
+{
+    return number.size();
+}
+
+int BigDecimalInt :: Sign()
+{
+    if (sign == '+')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+// operator << overloading function.
+ostream &operator << (ostream &out, BigDecimalInt num)
+{
+    if(num.sign == '+')
+    {
+        out << num.number << endl;
+    }
+    else
+    {
+        out << num.sign << num.number << endl;
+    }
     return out;
 }
 //------------------------------------------------------------------------------------------------------------------------------
