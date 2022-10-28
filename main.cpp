@@ -107,7 +107,6 @@ public:
     }
     BigDecimalInt operator-(BigDecimalInt anotherDec)
     {
-        //eslam
         int first=0,second=0;
         string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt,str3="";
         first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? -1:1);
@@ -128,7 +127,6 @@ public:
     }
     bool operator<(BigDecimalInt anotherDec)
     {
-        //eslam
         string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt;
         int first,second;
         first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? 1:-1);
@@ -143,7 +141,6 @@ public:
     }
     bool operator>(BigDecimalInt anotherDec)
     {
-        //youssef
         string str1=strBigDecimalInt,str2=anotherDec.strBigDecimalInt;
         int first,second;
         first=(str1[0]!='-'? 1:-1),second=(str2[0]!='-'? 1:-1);
@@ -158,7 +155,6 @@ public:
     }
     bool operator==(BigDecimalInt anotherDec)
     {
-        //youssef
         if (strBigDecimalInt == anotherDec.strBigDecimalInt)
             return true;
         else
@@ -166,12 +162,10 @@ public:
     }
     BigDecimalInt operator=(BigDecimalInt anotherDec)
     {
-        //youssef
         strBigDecimalInt = anotherDec.strBigDecimalInt;
     }
     int size()
     {
-        //youssef
         int size = strBigDecimalInt.length();
         return size;
     }
