@@ -6,8 +6,8 @@
 // Author3 and ID and Group: Mohamed Ashraf Fahim  ID: 20210329 (f, i, j , k)
 /*
 description:
- */
 
+ */
 #include <iostream>
 #include <deque>
 #include <regex>
@@ -19,22 +19,25 @@ private:
     char sign;
     void setNumber(string num);
     bool checkValidInput(string input);
-
 public:
     bool operator < (const BigDecimalInt& anotherDec);
     bool operator > (const BigDecimalInt& anotherDec);
     bool operator == (const BigDecimalInt anotherDec);
-    BigDecimalInt& operator = (BigDecimalInt &anotherDec);
+    BigDecimalInt& operator = (BigDecimalInt anotherDec);
     BigDecimalInt operator + (BigDecimalInt number2);
     BigDecimalInt operator - (BigDecimalInt anotherDec);
     friend ostream &operator << (ostream &out, BigDecimalInt num);
     int size();
     int Sign();
-
+    void push_back(char ch);
+    void push_front(char ch);
     BigDecimalInt(){}
     BigDecimalInt(string num)
     {
         setNumber(num);
+    }
+    string getnum(){
+        return number;
     }
 };
 //----------------------------------------------------------------------------------------------------------------------
@@ -44,7 +47,7 @@ bool BigDecimalInt :: checkValidInput(string input)
     regex validInput("[-+]?[0-9]+");
     return regex_match(input, validInput);
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // constructor that takes a string as an input.
 void BigDecimalInt :: setNumber(string num)
 {
@@ -67,8 +70,13 @@ void BigDecimalInt :: setNumber(string num)
             sign = '+';
         }
     }
+    else
+    {
+        cout << "Invalid" << "\n";
+        exit(1);
+    }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // operator < overloading function.
 bool BigDecimalInt :: operator < (const BigDecimalInt& anotherDec)
 {
@@ -103,7 +111,7 @@ bool BigDecimalInt :: operator < (const BigDecimalInt& anotherDec)
         return comp1 > comp2;
     }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // operator > overloading function.
 bool BigDecimalInt :: operator > (const BigDecimalInt &anotherDec)
 {
@@ -138,7 +146,7 @@ bool BigDecimalInt :: operator > (const BigDecimalInt &anotherDec)
         return comp1 < comp2;
     }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // operator == overloading function.
 bool BigDecimalInt :: operator == (const BigDecimalInt anotherDec)
 {
@@ -152,22 +160,77 @@ bool BigDecimalInt :: operator == (const BigDecimalInt anotherDec)
         return false;
     }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // operator = overloading function.
-BigDecimalInt& BigDecimalInt :: operator = (BigDecimalInt &anotherDec)
+BigDecimalInt& BigDecimalInt :: operator = (BigDecimalInt anotherDec)
 {
     sign = anotherDec.sign;
     number = anotherDec.number;
     return *this;
 }
-//----------------------------------------------------------------------------------------------------------------------
+
+//addition implementation.
+string addition(string num1,string num2)
+{
+    auto it1 = num1.rbegin();
+    auto it2 = num2.rbegin();
+    string res = "";
+    int carry = 0;
+    while (it1 != num1.rend())
+    {
+        int twoDigitsSum;
+        carry = 0;
+        twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
+        if (twoDigitsSum >= 10)
+        {
+            carry = 1;
+        }
+        res = char((twoDigitsSum % 10) + '0') + res;
+        *(it1 + 1) = char(((*(it1 + 1) - '0') + carry) + '0');
+        it1++;
+        it2++;
+    }
+    if (carry)
+    {
+        res = char((carry) + '0') + res;
+    }
+    return res;
+}
+
+//subtraction implementation
+string subtraction(string num1,string num2){
+    deque<long long>d;
+    string res;
+
+    for (long long i = num1.length() - 1; i >= 0; i--)
+    {
+        if (num1[i] < num2[i])
+        {
+            num1[i] = char (((num1[i] - '0') + 10) + '0');
+            num1[i - 1] = char (((num1[i - 1] - '0') - 1) + '0');
+            d.push_front((num1[i] - '0') - (num2[i] - '0'));
+        }
+        else
+        {
+            d.push_front((num1[i] - '0') - (num2[i] - '0'));
+        }
+    }
+
+    for (auto i : d)
+    {
+        res += to_string(i);
+    }
+    return res;
+}
+
 // // operator + overloading function.
 BigDecimalInt BigDecimalInt :: operator + (BigDecimalInt number2)
 {
     BigDecimalInt result;
     char signNumber1 = sign, signNumber2 = number2.sign;
-
     string num1 = number, num2 = number2.number;
+    BigDecimalInt number1 = *this;
+
     while (num1.length() < num2.length()){
         num1 = '0' + num1;
     }
@@ -177,84 +240,31 @@ BigDecimalInt BigDecimalInt :: operator + (BigDecimalInt number2)
 
     if (signNumber1 == signNumber2){
         result.sign = signNumber1;
-
-        auto it1 = num1.rbegin();
-        auto it2 = num2.rbegin();
-        int carry = 0;
-
-        while (it1 != num1.rend()){
-            int twoDigitsSum;
-            carry = 0;
-            twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
-            if(twoDigitsSum >= 10){
-                carry = 1;
-            }
-            result.number = char((twoDigitsSum % 10) + '0') + result.number;
-            *(it1 + 1) = char (((*(it1 + 1) - '0') + carry) + '0');
-            it1++;
-            it2++;
-        }
-
-        if(carry){
-            result.number = char ((carry) + '0') + result.number;
-        }
+        result.number = addition(num1,num2);
 
     }else{
-        deque<long long> d;
-        string res = "";
 
-        if (num1 < num2)
+        if(number1.sign=='-')
         {
-            swap(num1, num2);
-            swap(signNumber1,signNumber2);
+            number1.sign = '+';
+            result = (number2-number1);
         }
-
-        for (long long i = num1.length() - 1; i >= 0; i--)
-        {
-            if (num1[i] < num2[i])
-            {
-                num1[i] = char (((num1[i] - '0') + 10) + '0');
-                num1[i - 1] = char (((num1[i - 1] - '0') - 1) + '0');
-                d.push_front((num1[i] - '0') - (num2[i] - '0'));
-            }
-            else
-            {
-                d.push_front((num1[i] - '0') - (num2[i] - '0'));
-            }
+        else{
+            number2.sign = '+';
+            result = (number1-number2);
         }
-
-        bool right = false;
-        for (auto i : d)
-        {
-            res += to_string(i);
-        }
-
-        for (long long i = 0; i < res.length(); i++)
-        {
-            if (res[i] != '0')
-            {
-                right = true;
-            }
-            if (!right && res[i] == '0')
-            {
-                res.erase(i, 1);
-                i--;
-            }
-        }
-        if(res.empty())res="0";
-        result.sign = signNumber1;
-        result.number = res;
     }
     return result;
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // operator - overloading function.
 BigDecimalInt BigDecimalInt :: operator - (BigDecimalInt anotherDec)
 {
     BigDecimalInt obj;
-    string strmin = "", res = "";
     deque<long long> d;
-
+    string strmin = "", res = "";
+    string num1 = number, num2 = anotherDec.number;
+    char sign1 = sign, sign2 = anotherDec.sign;
 
     if (number.length() > anotherDec.number.length())
     {
@@ -263,7 +273,7 @@ BigDecimalInt BigDecimalInt :: operator - (BigDecimalInt anotherDec)
             strmin += '0';
         }
         strmin += anotherDec.number;
-        anotherDec.number = strmin;
+        num2 = strmin;
     }
     else if (number.length() < anotherDec.number.length())
     {
@@ -272,90 +282,40 @@ BigDecimalInt BigDecimalInt :: operator - (BigDecimalInt anotherDec)
             strmin += '0';
         }
         strmin += number;
-        number = strmin;
+        num1 = strmin;
     }
-    bool ok = false;
-    if (number < anotherDec.number)
+
+    bool ok = false, is_determined = false;
+    if (num1 < num2)
     {
-        swap(number, anotherDec.number);
+        swap(num1, num2);
+        swap(sign1, sign2);
         ok = true;
     }
-    bool nv = true;
-    if (sign == '-' && anotherDec.sign == '-')
-    {
-        for (long long i = number.length() - 1; i >= 0; i--)
-        {
-            if (number[i] < anotherDec.number[i])
-            {
-                number[i] = char (((number[i] - '0') + 10) + '0');
-                number[i - 1] = char (((number[i - 1] - '0') - 1) + '0');
-                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
-            }
-            else
-            {
-                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
-            }
-        }
-        ok = !ok;
-    }
-    else if ((sign == '-' || anotherDec.sign == '-'))
-    {
-        string num1 = number, num2 = anotherDec.number;
-        auto it1 = num1.rbegin();
-        auto it2 = num2.rbegin();
-        int carry = 0;
 
-        while (it1 != num1.rend())
-        {
-            int twoDigitsSum;
-            carry = 0;
-            twoDigitsSum = ((*it1 - '0') + (*it2 - '0'));
-            if (twoDigitsSum >= 10)
-            {
-                carry = 1;
-            }
-            res = char((twoDigitsSum % 10) + '0') + res;
-            *(it1 + 1) = char(((*(it1 + 1) - '0') + carry) + '0');
-            it1++;
-            it2++;
-        }
+    if (sign1 == sign2 )
+    {
+        res = subtraction(num1,num2);
 
-        if (carry)
-        {
-            res = char((carry) + '0') + res;
-        }
-        if (sign == '-')
-        {
-            nv = false;
-        }
+        if(sign1=='-')ok = !ok;
     }
     else
     {
-        for (long long i = number.length() - 1; i >= 0; i--)
+        res = addition(num1,num2);
+        if(sign == '-')
         {
-            if (number[i] < anotherDec.number[i])
-            {
-                number[i] = char (((number[i] - '0') + 10) + '0');
-                number[i - 1] = char (((number[i - 1] - '0') - 1) + '0');
-                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
-            }
-            else
-            {
-                d.push_front((number[i] - '0') - (anotherDec.number[i] - '0'));
-            }
+            obj.sign = '-';
+            is_determined = true;
         }
-        nv = true;
+        else
+        {
+            obj.sign = '+';
+            is_determined = true;
+        }
+
     }
-    if (!nv || ok) {
-        obj.sign = '-';
-    }else{
-        obj.sign = '+';
-    }
+
     bool right = false;
-    for (auto i : d)
-    {
-        res += to_string(i);
-    }
     for (long long i = 0; i < res.length(); i++)
     {
         if (res[i] != '-' && res[i] != '0')
@@ -368,17 +328,28 @@ BigDecimalInt BigDecimalInt :: operator - (BigDecimalInt anotherDec)
             i--;
         }
     }
-    if(res.empty())res="0";
-    obj.number = res;
+
+    if(res.empty()) res = "0";
+    if (!is_determined && (ok))
+    {
+        obj.sign = '-';
+    }
+    else if(!is_determined)
+    {
+        obj.sign = '+';
+    }
+
+    obj.number=res;
     return obj;
 }
-//----------------------------------------------------------------------------------------------------------------------
+
 // function to return the size of number.
 int BigDecimalInt :: size()
 {
     return number.size();
 }
 
+// function returns the sign.
 int BigDecimalInt :: Sign()
 {
     if (sign == '+')
@@ -391,27 +362,57 @@ int BigDecimalInt :: Sign()
     }
 }
 
+// function to push a character.
+void BigDecimalInt ::push_back(char ch)
+{
+    number.push_back(ch);
+}
+
+// function to push a character in the front.
+void BigDecimalInt ::push_front(char ch)
+{
+    string temp;
+    temp = ch + number;
+    number = temp;
+}
+
 // operator << overloading function.
 ostream &operator << (ostream &out, BigDecimalInt num)
 {
     if(num.sign == '+')
     {
-        out << num.number << endl;
+        out << num.number ;
     }
     else
     {
-        out << num.sign << num.number << endl;
+        if(num.number == "0")
+        {
+            out << num.number ;
+        }
+        else
+        {
+            out << num.sign << num.number ;
+        }
     }
     return out;
 }
-//------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
 class BigReal {
 private:
     BigDecimalInt integer,fraction;
 public:
-    BigReal (double realNumber = 0.0); // Default constructor
-    BigReal (string realNumber);
-    BigReal (BigDecimalInt bigInteger);
+    BigReal (double realNumber = 0.0) // Default constructor
+    {
+        //Ahmed
+    }
+    BigReal (string realNumber)
+    {
+        //Ahmed
+    }
+    BigReal (BigDecimalInt bigInteger)
+    {
+        //Ahmed
+    }
     BigReal (const BigReal& other); // Copy constructor
     BigReal (BigReal&& other); // Move constructor
     BigReal& operator= (BigReal& other); // Assignment operator
@@ -424,9 +425,55 @@ public:
     int size();
     int sign();
     friend ostream& operator << (ostream& out, BigReal num);
-    friend istream& operator >> (istream& out, BigReal num);
+    friend istream& operator >> (istream& in, BigReal num);
 };
-//------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
+BigReal BigReal::operator+ (BigReal& other)
+{
+    //Eslam
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal BigReal::operator- (BigReal& other)
+{
+    //Eslam
+}
+//----------------------------------------------------------------------------------------------------------------------
+bool BigReal::operator< (BigReal anotherReal)
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+bool BigReal::operator> (BigReal anotherReal)
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+bool BigReal::operator== (BigReal anotherReal)
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+int BigReal::size()
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+int BigReal::sign()
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+ostream& operator << (ostream& out, BigReal num)
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
+istream& operator >> (istream& in, BigReal num)
+{
+    //abdelrahman
+}
+//----------------------------------------------------------------------------------------------------------------------
 int main() {
-
+    BigReal n("123456767.23748974");
+    BigReal m("8978972342.238800831");
 }
