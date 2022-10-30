@@ -47,7 +47,6 @@ bool BigDecimalInt :: checkValidInput(string input)
     regex validInput("[-+]?[0-9]+");
     return regex_match(input, validInput);
 }
-
 // constructor that takes a string as an input.
 void BigDecimalInt :: setNumber(string num)
 {
@@ -396,25 +395,16 @@ ostream &operator << (ostream &out, BigDecimalInt num)
     }
     return out;
 }
-//----------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
 class BigReal {
 private:
     BigDecimalInt integer,fraction;
 public:
-    BigReal (double realNumber = 0.0) // Default constructor
-    {
-        //Ahmed
-    }
-    BigReal (string realNumber)
-    {
-        //Ahmed
-    }
-    BigReal (BigDecimalInt bigInteger)
-    {
-        //Ahmed
-    }
+    BigReal (double realNumber = 0.0); // Default constructor
+    BigReal (string realNumber);
+    BigReal (BigDecimalInt bigInteger);
     BigReal (const BigReal& other); // Copy constructor
-    BigReal (BigReal&& other); // Move constructor
+    BigReal (BigReal&& other);      // Move constructor
     BigReal& operator= (BigReal& other); // Assignment operator
     BigReal& operator= (BigReal&& other); // Move assignment
     BigReal operator+ (BigReal& other);
@@ -428,14 +418,143 @@ public:
     friend istream& operator >> (istream& in, BigReal num);
 };
 //----------------------------------------------------------------------------------------------------------------------
-BigReal BigReal::operator+ (BigReal& other)
+BigReal::BigReal (double realNumber) // Default constructor
 {
-    //Eslam
+    //Ahmed
 }
 //----------------------------------------------------------------------------------------------------------------------
+BigReal::BigReal (string realNumber)
+{
+    //Ahmed
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal::BigReal (BigDecimalInt bigInteger)
+{
+    //Ahmed
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal::BigReal (const BigReal& other)
+{
+    //Ahmed
+    //Copy constructor
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal::BigReal (BigReal&& other)
+{
+    //Ahmed
+    //Move constructor
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal& BigReal::operator= (BigReal& other)
+{
+    //Ahmed
+    // Assignment operator
+}
+//----------------------------------------------------------------------------------------------------------------------
+BigReal& BigReal::operator= (BigReal&& other)
+{
+    //Ahmed
+    // Move assignment
+}
+//----------------------------------------------------------------------------------------------------------------------
+void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
+{
+    int sf1=frac1.size(),sf2=frac2.size();
+    while(sf1<sf2){
+        sf2--;
+        frac1.push_back('0');
+    }
+    while(sf2<sf1){
+        sf1--;
+        frac2.push_back('0');
+    }
+}
+//-----------------------------------------------------------------------------------
+void rightSfract(BigDecimalInt &fractionnum3,BigDecimalInt frac1,BigDecimalInt frac2)
+{
+    if(frac1.Sign()!=frac2.Sign()){
+        int i=0;
+        while(frac1.getnum()[i]==frac2.getnum()[i] && i<frac1.size()-1){
+            fractionnum3.push_front('0');
+            i++;
+        }
+    }
+}
+//-----------------------------------------------------------------------------------
+void sameBirsign(BigDecimalInt &integthi,BigDecimalInt &fracthi,BigDecimalInt fracfirst)
+{
+    string str;
+    if(fracthi.size()>fracfirst.size()){
+        str=fracthi.getnum();
+        str=str.substr(1,str.size()-1);
+        fracthi=BigDecimalInt(str);
+        integthi=integthi+BigDecimalInt("1");
+    }
+}
+void diffBirsign(BigDecimalInt &integthi,BigDecimalInt &fracthi)
+{
+    string strinteger(integthi.size(),'0'),strfrac(fracthi.size(),'0');
+    if(fracthi.getnum()!=strfrac){
+        if(integthi.getnum()==strinteger){
+            strinteger=(fracthi.Sign()==1?"+":"-")+strinteger;
+            integthi=BigDecimalInt(strinteger);
+        }
+        else{
+            bool istrue=1;string strdifffr="";char ch;
+            integthi=integthi+BigDecimalInt(integthi.Sign()==0?"+1":"-1");
+            for(int i=fracthi.size()-1;i>=0;i--){
+                if(fracthi.getnum()[i]!='0' && istrue==1){
+                    istrue=0;
+                    ch='9'-fracthi.getnum()[i]+49;
+                    strdifffr=ch;
+                }
+                else if(!istrue){
+                    ch='9'-fracthi.getnum()[i]+48;
+                    strdifffr=ch+strdifffr;
+                }
+            }
+            fracthi=BigDecimalInt(strdifffr);
+        }
+    }
+}
+//-----------------------------------------------------------------------------------
+BigReal BigReal :: operator + (BigReal& other)
+{
+    //Eslam
+    BigReal num3;
+    num3.integer=integer+other.integer;
+    equalfracs(fraction,other.fraction);
+    num3.fraction=fraction+other.fraction;
+    rightSfract(num3.fraction,fraction,other.fraction);
+    if(num3.integer.Sign()==num3.fraction.Sign()){
+        sameBirsign(num3.integer,num3.fraction,fraction);
+    }
+    else{
+        diffBirsign(num3.integer,num3.fraction);
+    }
+    return num3;
+}
+//-----------------------------------------------------------------------------------
 BigReal BigReal::operator- (BigReal& other)
 {
     //Eslam
+    string str1integ=(other.integer.Sign()==0?"+":"-")+other.integer.getnum(),
+    str2frac=(other.fraction.Sign()==0?"+":"-")+other.fraction.getnum();
+    other.integer=BigDecimalInt(str1integ);
+    other.fraction=BigDecimalInt(str2frac);
+    BigReal num3;
+    num3.integer=integer+other.integer;
+    equalfracs(fraction,other.fraction);
+    num3.fraction=fraction+other.fraction;
+    rightSfract(num3.fraction,fraction,other.fraction);
+    if(num3.integer.Sign()==num3.fraction.Sign()){
+        sameBirsign(num3.integer,num3.fraction,fraction);
+    }
+    else{
+        diffBirsign(num3.integer,num3.fraction);
+    }
+    return num3;
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 bool BigReal::operator< (BigReal anotherReal)
@@ -463,17 +582,16 @@ int BigReal::sign()
     //abdelrahman
 }
 //----------------------------------------------------------------------------------------------------------------------
-ostream& operator << (ostream& out, BigReal num)
+ostream &operator << (ostream &out,BigReal num)
 {
     //abdelrahman
 }
 //----------------------------------------------------------------------------------------------------------------------
-istream& operator >> (istream& in, BigReal num)
+istream& operator>> (istream& in, BigReal num)
 {
     //abdelrahman
 }
 //----------------------------------------------------------------------------------------------------------------------
 int main() {
-    BigReal n("123456767.23748974");
-    BigReal m("8978972342.238800831");
+
 }
