@@ -420,7 +420,7 @@ public:
     int size();
     int sign();
     friend ostream& operator << (ostream& out, BigReal num);
-    friend istream& operator >> (istream& in, BigReal num);
+    friend istream& operator >> (istream& in, BigReal &num);
 };
 //----------------------------------------------------------------------------------------------------------------------
 void fillbigreal(string str,string &integer,string &fraction)
@@ -510,6 +510,28 @@ void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
         if(sf1==sf2){
             str=(frac2.sign()==0?'-':'+')+frac2.getNumber()+str;
             frac2=BigDecimalInt(str);
+        }
+    }
+}
+//-----------------------------------------------------------------------------------
+void equalint(BigDecimalInt &int1,BigDecimalInt &int2)
+{
+    int sf1=int1.size(),
+    sf2=int2.size();string str="";
+    while(sf1<sf2){
+        sf2--;
+        str+='0';
+        if(sf1==sf2){
+            str=(int1.sign()==0?'-':'+')+int1.getNumber()+str;
+            int1=BigDecimalInt(str);
+        }
+    }
+    while(sf2<sf1){
+        sf1--;
+        str+='0';
+        if(sf1==sf2){
+            str=(int2.sign()==0?'-':'+')+int2.getNumber()+str;
+            int2=BigDecimalInt(str);
         }
     }
 }
@@ -614,43 +636,84 @@ BigReal BigReal::operator- (BigReal& other)
 bool BigReal::operator< (BigReal anotherReal)
 {
     //abdelrahman
+    equalint(integer,anotherReal.integer);
+    equalfracs(fraction,anotherReal.fraction);
+    if(integer<anotherReal.integer)
+        return true;
+    else if(integer==anotherReal.integer && fraction <anotherReal.fraction )
+        return true;
+    else
+        return false;
+
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 bool BigReal::operator> (BigReal anotherReal)
 {
     //abdelrahman
+    equalint(integer,anotherReal.integer);
+    equalfracs(fraction,anotherReal.fraction);
+    if(integer>anotherReal.integer)
+        return true;
+    else if(integer==anotherReal.integer && fraction > anotherReal.fraction )
+        return true;
+    else
+        return false;
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 bool BigReal::operator== (BigReal anotherReal)
 {
     //abdelrahman
+    equalint(integer,anotherReal.integer);
+    equalfracs(fraction,anotherReal.fraction);
+    if(integer==anotherReal.integer && fraction==anotherReal.fraction)
+        return true;
+    else
+        return false;
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 int BigReal::size()
 {
     //abdelrahman
+    return (integer.size()+fraction.size());
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 int BigReal::sign()
 {
     //abdelrahman
+    return (integer.sign());
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 ostream &operator << (ostream &out,BigReal num)
 {
     //abdelrahman
+    if(num.integer.sign()==0)
+        cout<<'-';
+    cout<<num.integer.getNumber()<<'.'<<num.fraction.getNumber();
+    return out;
+
 }
 //----------------------------------------------------------------------------------------------------------------------
-istream& operator>> (istream& in, BigReal num)
+istream& operator>> (istream& in, BigReal &num)
 {
-    //abdelrahman
+    //abdelrahman adel
+    string intstr,frastr,str;
+    cin>>str;
+    fillbigreal(str,intstr,frastr);
+    num.integer=BigDecimalInt(intstr);
+    num.fraction=BigDecimalInt(frastr);
+    return in;
+
 }
 //----------------------------------------------------------------------------------------------------------------------
 int main() {
-    BigReal n("-151212345.0");
-    BigReal m("123.0098");
-    BigReal f=n+m;
-    cout<<f<<endl;
-    f=n-m;
-    cout<<f<<endl;
+    BigReal n,m;
+    cin>>n;
+    cin>>m;
+    cout<<n<<endl;
+    cout<<m<<endl;
 }
