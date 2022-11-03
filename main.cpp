@@ -384,6 +384,23 @@ ostream &operator << (ostream &out, BigDecimalInt num)
     return out;
 }
 //----------------------------------------------------------------------------------------------------------------------
+bool chValInpreal(string input)
+{
+    regex validInput("[-+]?[0-9]+[.][0-9]+");
+    return regex_match(input, validInput);
+}
+
+// constructor that takes a string as an input.
+void setNumberreal(string num)
+{
+    bool validNumber = chValInpreal(num);
+    if(!validNumber)
+    {
+        cout << "Invalid" << "\n";
+        exit(1);
+    }
+}
+
 class BigReal {
 private:
     BigDecimalInt integer,fraction;
@@ -406,43 +423,73 @@ public:
     friend istream& operator >> (istream& in, BigReal num);
 };
 //----------------------------------------------------------------------------------------------------------------------
+void fillbigreal(string str,string &integer,string &fraction)
+{
+    int index=str.find('.');
+    integer=str.substr(0,index);
+    fraction=str.substr(index+1,str.size()-index-1);
+    fraction=(str[0]=='-'?"-":"+")+fraction;
+}
+//----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (double realNumber) // Default constructor
 {
     //Ahmed
+    string str= to_string(realNumber),myinteger,myfraction;
+    setNumberreal(str);
+    fillbigreal(str,myinteger,myfraction);
+    integer=BigDecimalInt(myinteger);
+    fraction=BigDecimalInt(myfraction);
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (string realNumber)
 {
     //Ahmed
+    setNumberreal(realNumber);
+    string myinteger,myfraction;
+    fillbigreal(realNumber,myinteger,myfraction);
+    integer=BigDecimalInt(myinteger);
+    fraction=BigDecimalInt(myfraction);
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (BigDecimalInt bigInteger)
 {
     //Ahmed
+    integer=bigInteger;
+    fraction=BigDecimalInt("0");
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (const BigReal& other)
 {
     //Ahmed
     //Copy constructor
+    integer=other.integer;
+    fraction=other.fraction;
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (BigReal&& other)
 {
     //Ahmed
     //Move constructor
+    integer=other.integer;
+    fraction=other.fraction;
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal& BigReal::operator= (BigReal& other)
 {
     //Ahmed
     // Assignment operator
+    integer=other.integer;
+    fraction=other.fraction;
+    return *this;
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal& BigReal::operator= (BigReal&& other)
 {
     //Ahmed
     // Move assignment
+    integer=other.integer;
+    fraction=other.fraction;
+    return *this;
 }
 //----------------------------------------------------------------------------------------------------------------------
 void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
@@ -600,5 +647,10 @@ istream& operator>> (istream& in, BigReal num)
 }
 //----------------------------------------------------------------------------------------------------------------------
 int main() {
-
+    BigReal n("-151212345.0");
+    BigReal m("123.0098");
+    BigReal f=n+m;
+    cout<<f<<endl;
+    f=n-m;
+    cout<<f<<endl;
 }
