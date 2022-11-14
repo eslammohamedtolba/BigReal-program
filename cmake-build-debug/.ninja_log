@@ -1,7 +1,9 @@
 # ninja log v5
-6	9074	6890340337944084	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
-9075	10139	6890340348507641	task1_BigReal_program.exe	e924876722b6adb
-11	11329	6890340593246152	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
-11330	12452	6890340604420289	task1_BigReal_program.exe	e924876722b6adb
 8	17824	6890340893120268	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
 17825	19369	6890340908571396	task1_BigReal_program.exe	e924876722b6adb
+3	3400	6901318158562686	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+16	9089	6901318215370150	CMakeFiles/task1_BigReal_program.dir/BigReal.cpp.obj	b64ec6fb00db2645
+40	9171	6901318216259588	CMakeFiles/task1_BigReal_program.dir/BigDecimalInt.cpp.obj	f2e5a04123bf45c2
+9172	10758	6901318232062469	task1_BigReal_program.exe	7caa9ff157c0901a
+4	1984	6901318413001373	CMakeFiles/task1_BigReal_program.dir/main.cpp.obj	5ca370ea480dbee2
+1986	3573	6901318428767946	task1_BigReal_program.exe	7caa9ff157c0901a
