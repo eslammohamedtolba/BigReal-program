@@ -18,8 +18,10 @@ void BigDecimalInt :: setNumber(string num)
         number = num;
         if(number[0] == '+')
         {
+            
             number.erase(0,1);
             signNumber = '+';
+            
         }
         else if (number[0] == '-')
         {
