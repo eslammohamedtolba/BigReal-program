@@ -30,8 +30,11 @@ void BigDecimalInt :: setNumber(string num)
         }
         else
         {
+            
             signNumber = '+';
+            
         }
+        
     }
     else
     {
