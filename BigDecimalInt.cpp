@@ -2,8 +2,10 @@
 // regex function that checks the validation of the input.
 bool BigDecimalInt :: checkValidInput(string input)
 {
+    
     regex validInput("[-+]?[0-9]+");
     return regex_match(input, validInput);
+    
 }
 
 // constructor that takes a string as an input.
