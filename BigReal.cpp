@@ -89,6 +89,7 @@ BigReal& BigReal::operator= (BigReal&& other)
 //ahmed
 void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
 {
+    // this function to make two fractions are the same in its size
     int sf1=frac1.size(),
             sf2=frac2.size();string str="";
     while(sf1<sf2){
@@ -112,6 +113,7 @@ void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
 //ahmed
 void equalint(BigDecimalInt &int1,BigDecimalInt &int2)
 {
+    // this function to make two integers are the same in its size
     int sf1=int1.size(),
             sf2=int2.size();string str="";
     while(sf1<sf2){
