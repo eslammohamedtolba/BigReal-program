@@ -16,6 +16,7 @@ void setNumberreal(string num)
     }
 }
 //----------------------------------------------------------------------------------------------------------------------
+//ahmed
 void fillbigreal(string str,string &integer,string &fraction)
 {
     int index=str.find('.');
@@ -26,7 +27,7 @@ void fillbigreal(string str,string &integer,string &fraction)
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (double realNumber) // Default constructor
 {
-    //Ahmed
+    //ahmed
     string str= to_string(realNumber),myinteger,myfraction;
     setNumberreal(str);
     fillbigreal(str,myinteger,myfraction);
@@ -36,7 +37,7 @@ BigReal::BigReal (double realNumber) // Default constructor
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (string realNumber)
 {
-    //Ahmed
+    //ahmed
     setNumberreal(realNumber);
     string myinteger,myfraction;
     fillbigreal(realNumber,myinteger,myfraction);
@@ -46,14 +47,14 @@ BigReal::BigReal (string realNumber)
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (BigDecimalInt bigInteger)
 {
-    //Ahmed
+    //ahmed
     integer=bigInteger;
     fraction=BigDecimalInt("0");
 }
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (const BigReal& other)
 {
-    //Ahmed
+    //ahmed
     //Copy constructor
     integer=other.integer;
     fraction=other.fraction;
@@ -61,7 +62,7 @@ BigReal::BigReal (const BigReal& other)
 //----------------------------------------------------------------------------------------------------------------------
 BigReal::BigReal (BigReal&& other)
 {
-    //Ahmed
+    //ahmed
     //Move constructor
     integer=other.integer;
     fraction=other.fraction;
@@ -69,7 +70,7 @@ BigReal::BigReal (BigReal&& other)
 //----------------------------------------------------------------------------------------------------------------------
 BigReal& BigReal::operator= (BigReal& other)
 {
-    //Ahmed
+    //ahmed
     // Assignment operator
     integer=other.integer;
     fraction=other.fraction;
@@ -78,13 +79,14 @@ BigReal& BigReal::operator= (BigReal& other)
 //----------------------------------------------------------------------------------------------------------------------
 BigReal& BigReal::operator= (BigReal&& other)
 {
-    //Ahmed
+    //ahmed
     // Move assignment
     integer=other.integer;
     fraction=other.fraction;
     return *this;
 }
 //----------------------------------------------------------------------------------------------------------------------
+//ahmed
 void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
 {
     int sf1=frac1.size(),
@@ -107,6 +109,7 @@ void equalfracs(BigDecimalInt &frac1,BigDecimalInt &frac2)
     }
 }
 //-----------------------------------------------------------------------------------
+//ahmed
 void equalint(BigDecimalInt &int1,BigDecimalInt &int2)
 {
     int sf1=int1.size(),
@@ -129,6 +132,7 @@ void equalint(BigDecimalInt &int1,BigDecimalInt &int2)
     }
 }
 //-----------------------------------------------------------------------------------
+//ahmed
 void rightSfract(BigDecimalInt &fractionnum3,BigDecimalInt frac1,BigDecimalInt frac2)
 {
     if(frac1.sign()!=frac2.sign()){
@@ -142,6 +146,7 @@ void rightSfract(BigDecimalInt &fractionnum3,BigDecimalInt frac1,BigDecimalInt f
     }
 }
 //-----------------------------------------------------------------------------------
+//ahmed
 void sameBirsign(BigDecimalInt &integthi,BigDecimalInt &fracthi,BigDecimalInt fracfirst)
 {
     string str;
@@ -152,6 +157,8 @@ void sameBirsign(BigDecimalInt &integthi,BigDecimalInt &fracthi,BigDecimalInt fr
         integthi=integthi+BigDecimalInt("1");
     }
 }
+//------------------------------------------------------------------------------------
+//ahmed
 void diffBirsign(BigDecimalInt &integthi,BigDecimalInt &fracthi)
 {
     string strinteger(integthi.size(),'0'),strfrac(fracthi.size(),'0');
