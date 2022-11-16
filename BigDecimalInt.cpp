@@ -11,6 +11,7 @@ bool BigDecimalInt :: checkValidInput(string input)
 // constructor that takes a string as an input.
 void BigDecimalInt :: setNumber(string num)
 {
+    
     bool validNumber = checkValidInput(num);
     if(validNumber)
     {
